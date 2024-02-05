@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Selection</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        form {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        label {
+            display: block;
+            background-color: #3498db;
+            color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-bottom: 10px;
+        }
+
+        label:hover {
+            background-color: #2980b9;
+        }
+
+        #selected-file {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        button {
+            background-color: #3498db;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        /* Styling for the success message popup */
+        #success-popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #4CAF50;
+            color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <form action="/upload" method="POST" enctype="multipart/form-data" onsubmit="showSuccessPopup()">
+        <h1>Select File</h1>
+        <label for="file">Choose File</label>
+        <input type="file" id="file" name="file" onchange="displaySelectedFileName()">
+        <div id="selected-file"></div>
+        <button type="submit">Upload</button>
+    </form>
+
+    <!-- Success message popup -->
+    <div id="success-popup">
+        <p>File uploaded successfully!</p>
+    </div>
+
+    <script>
+        function showSuccessPopup() {
+            // Display the success message popup
+            document.getElementById("success-popup").style.display = "block";
+            
+            // Redirect to the next page after a delay (e.g., 3 seconds)
+            setTimeout(function() {
+                document.getElementById("success-popup").style.display = "none";
+                window.location.href = "/next-page"; // Change "/next-page" to your actual next page URL
+            }, 20000); // 3000 milliseconds (3 seconds) in this example
+        }
+
+        function displaySelectedFileName() {
+            // Display the selected file name
+            var selectedFile = document.getElementById("file").files[0];
+            document.getElementById("selected-file").innerHTML = selectedFile ? "Selected File: " + selectedFile.name : "";
+        }
+    </script>
+</body>
+</html>
