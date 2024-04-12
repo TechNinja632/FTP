@@ -90,6 +90,9 @@
         <input type="file" id="file" name="file" onchange="displaySelectedFileName()">
         <div id="selected-file"></div>
         <button type="submit">Upload</button>
+
+        <!-- Add this button inside the <form> tag -->
+        <button type="button" onclick="viewUploads()">VIEW UPLOADS</button>
     </form>
 
     <!-- Success message popup -->
@@ -105,14 +108,19 @@
             // Redirect to the next page after a delay (e.g., 3 seconds)
             setTimeout(function() {
                 document.getElementById("success-popup").style.display = "none";
-                window.location.href = "/next-page"; // Change "/next-page" to your actual next page URL
-            }, 20000); // 3000 milliseconds (3 seconds) in this example
+                window.location.href = "/file_info"; // Change "/file_info" to your actual file_info page URL
+            }, 3000); // 3000 milliseconds (3 seconds)
         }
 
         function displaySelectedFileName() {
             // Display the selected file name
             var selectedFile = document.getElementById("file").files[0];
             document.getElementById("selected-file").innerHTML = selectedFile ? "Selected File: " + selectedFile.name : "";
+        }
+
+        function viewUploads() {
+            // Redirect to the file_info page
+            window.location.href = "/file_info";
         }
     </script>
 </body>
