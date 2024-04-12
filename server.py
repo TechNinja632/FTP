@@ -1,11 +1,11 @@
-from flask import Flask, render_template, request, redirect, url_for, send_from_directory
+from flask import Flask, render_template, request, redirect, url_for, send_from_directory, flash
 import os
 import random
 import string
 
 app = Flask(__name__)
 
-UPLOAD_FOLDER = os.path.join(os.getcwd(), 'uploads')
+UPLOAD_FOLDER = "/home/yourfolder/ftp/uploads"
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 def generate_random_string(length=10):
@@ -25,10 +25,10 @@ def upload_file():
     if file:
         filename = generate_random_string() + '_' + file.filename
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        return redirect(url_for('file_info', filename=filename))
+        return redirect(url_for('file_info'))
 
-@app.route('/file_info/<filename>')
-def file_info(filename):
+@app.route('/file_info')
+def file_info():
     directory = app.config['UPLOAD_FOLDER']
     files = os.listdir(directory)
     return render_template('file_info.html', directory=directory, files=files)
@@ -37,7 +37,21 @@ def file_info(filename):
 def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename, as_attachment=True)
 
+@app.route('/delete/<filename>', methods=['POST'])
+def delete_file(filename):
+    try:
+        file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        if os.path.exists(file_path):
+            os.remove(file_path)
+            flash(f'File {filename} deleted successfully', 'success')
+        else:
+            flash(f'File {filename} not found', 'error')
+    except Exception as e:
+        pass  # Ignore any errors that occur during deletion
+    return redirect(url_for('file_info'))
+
+
 if __name__ == '__main__':
-    # Dynamic port binding for Heroku deployment
     port = int(os.environ.get('PORT', 5000))
+    app.secret_key = 'your_secret_key'  # Change this to a secure secret key
     app.run(host='0.0.0.0', port=port)
