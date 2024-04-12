@@ -33,6 +33,9 @@
             padding: 10px;
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between; /* Align items horizontally */
+            align-items: center; /* Align items vertically */
         }
 
         a {
@@ -44,13 +47,60 @@
         a:hover {
             text-decoration: underline;
         }
+
+        .delete-btn {
+            background-color: #e74c3c;
+            color: #fff;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .flash-messages {
+            padding: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .flash-messages p {
+            margin: 0;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+
+        .flash-messages .success {
+            background-color: #4CAF50;
+            color: #fff;
+        }
+
+        .flash-messages .error {
+            background-color: #e74c3c;
+            color: #fff;
+        }
     </style>
 </head>
 <body>
+    <div class="flash-messages">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <p class="{{ message[1] }}">{{ message[0] }}</p>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
     <h1>Files in {{ directory }}</h1>
     <ul>
-        {% for file in files %}
-        <li><a href="{{ url_for('uploaded_file', filename=file) }}">{{ file }}</a></li>
+        {% for file in files[::-1] %}
+        <!-- Iterate over the reversed list of files -->
+        <li>
+            <a href="{{ url_for('uploaded_file', filename=file) }}">{{ file.split('_')[-1] }}</a>
+            <form action="{{ url_for('delete_file', filename=file) }}" method="post">
+                <button type="submit" class="delete-btn">Delete</button>
+            </form>
+        </li>
         {% endfor %}
     </ul>
 </body>
